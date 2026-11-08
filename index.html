@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0b12">
+  <meta name="description" content="Введите пароль, чтобы получить поздравление.">
+  <title>Секретный доступ</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0b0b12;
+      color: #f5f3ff;
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; margin: 0; }
+    body {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      overflow-x: hidden;
+      background:
+        radial-gradient(ellipse at 50% 38%, rgba(100, 80, 190, .16), transparent 52%),
+        radial-gradient(ellipse at 10% 90%, rgba(56, 75, 145, .10), transparent 42%),
+        #0b0b12;
+    }
+    .card {
+      width: min(100%, 440px);
+      padding: clamp(28px, 7vw, 46px);
+      border: 1px solid rgba(185, 174, 255, .14);
+      border-radius: 28px;
+      background: linear-gradient(145deg, rgba(27, 26, 42, .94), rgba(17, 17, 27, .96));
+      box-shadow: 0 28px 90px rgba(0, 0, 0, .46), inset 0 1px rgba(255,255,255,.035);
+      text-align: center;
+    }
+    h1 {
+      margin: 0 0 30px;
+      font-size: clamp(25px, 6vw, 32px);
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: -.8px;
+    }
+    form { display: grid; gap: 16px; }
+    input {
+      width: 100%;
+      min-height: 58px;
+      padding: 0 18px;
+      border: 1px solid rgba(190, 181, 255, .23);
+      border-radius: 15px;
+      outline: none;
+      background: rgba(8, 8, 15, .58);
+      color: #fff;
+      font: inherit;
+      font-size: 16px;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+    input::placeholder { color: #858397; }
+    input:focus {
+      border-color: #9181f3;
+      background: rgba(12, 11, 22, .9);
+      box-shadow: 0 0 0 4px rgba(124, 105, 238, .14);
+    }
+    button {
+      min-height: 58px;
+      border: 0;
+      border-radius: 15px;
+      padding: 0 22px;
+      background: linear-gradient(105deg, #7665e8, #6257c9);
+      color: white;
+      font: inherit;
+      font-weight: 650;
+      font-size: 17px;
+      cursor: pointer;
+      box-shadow: 0 10px 28px rgba(92, 77, 210, .25);
+      transition: transform .18s, filter .18s, box-shadow .18s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:active { transform: scale(.985); filter: brightness(1.1); }
+    button:focus-visible { outline: 3px solid rgba(190, 181, 255, .7); outline-offset: 3px; }
+    .message {
+      min-height: 24px;
+      margin: 18px 0 0;
+      font-size: 15px;
+      line-height: 1.5;
+      color: #a6a2b8;
+    }
+    .message.error { color: #f19aab; }
+    .message.success {
+      margin-top: 24px;
+      color: #e2dcff;
+      font-size: clamp(23px, 6vw, 29px);
+      font-weight: 700;
+      letter-spacing: -.5px;
+    }
+    @media (max-width: 380px) {
+      body { padding: 16px; }
+      .card { border-radius: 23px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1 id="heading">Введите очень секретный пароль!</h1>
+    <form id="password-form" novalidate>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        placeholder="Пароль"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        aria-label="Пароль"
+        required
+      >
+      <button type="submit">Проверить</button>
+    </form>
+    <p id="message" class="message" role="status" aria-live="polite"></p>
+  </main>
+
+  <script>
+    // Это пароль для простого сюрприза, а не средство защиты конфиденциальных файлов.
+    const SECRET = 'Варенье-очень-вкусное';
+    const FILE_NAME = 'Поздравляю!.png';
+
+    const form = document.getElementById('password-form');
+    const input = document.getElementById('password');
+    const heading = document.getElementById('heading');
+    const message = document.getElementById('message');
+
+    function downloadWallpaper() {
+      const link = document.createElement('a');
+      link.href = './' + encodeURIComponent(FILE_NAME);
+      link.download = FILE_NAME;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (input.value === SECRET) {
+        heading.textContent = 'С днём рождения';
+        form.hidden = true;
+        message.textContent = '';
+        message.className = 'message';
+        downloadWallpaper();
+      } else {
+        message.textContent = 'Пароль неверный. Попробуйте ещё раз.';
+        message.className = 'message error';
+        input.focus();
+        input.select();
+      }
+    });
+  </script>
+</body>
+</html>
